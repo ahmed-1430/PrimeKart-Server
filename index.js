@@ -52,6 +52,13 @@ app.post("/api/products", async (req, res) => {
 });
 
 
+//  Get All Products
+app.get("/api/products", async (req, res) => {
+  const products = await productsCollection.find().toArray();
+  res.json(products);
+});
+
+
 
 
 //  SERVER START
