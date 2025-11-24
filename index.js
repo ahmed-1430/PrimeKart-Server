@@ -39,14 +39,33 @@ app.get("/", (req, res) => {
 
 //  Register User
 app.post("/users/register", async (req, res) => {
-  const { name, email, password } = req.body;
+    const { name, email, password } = req.body;
 
-  const exists = await usersCollection.findOne({ email });
-  if (exists) return res.status(400).json({ message: "User already exists" });
+    const exists = await usersCollection.findOne({ email });
+    if (exists) return res.status(400).json({ message: "User already exists" });
 
-  await usersCollection.insertOne({ name, email, password });
-  res.json({ message: "✅ User Registered Successfully" });
+    await usersCollection.insertOne({ name, email, password });
+    res.json({ message: "✅ User Registered Successfully" });
 });
+
+
+//  Login User
+app.post("/users/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await usersCollection.findOne({ email, password });
+    if (!user) return res.status(401).json({ message: "Invalid Credentials" });
+
+    res.json({
+        message: " Login Successful",
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email
+        }
+    });
+});
+
 
 
 
@@ -85,14 +104,14 @@ app.get("/products/:id", async (req, res) => {
 
 //  Delete Product
 app.delete("/products/:id", async (req, res) => {
-  const id = req.params.id;
+    const id = req.params.id;
 
-  const result = await productsCollection.deleteOne({ _id: new ObjectId(id) });
-  if (result.deletedCount === 0) {
-    return res.status(404).json({ message: "Product Not Found" });
-  }
+    const result = await productsCollection.deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) {
+        return res.status(404).json({ message: "Product Not Found" });
+    }
 
-  res.json({ message: " Product Deleted Successfully" });
+    res.json({ message: " Product Deleted Successfully" });
 });
 
 
