@@ -42,21 +42,33 @@ app.get("/", (req, res) => {
 
 //  Add Product
 app.post("/api/products", async (req, res) => {
-  const product = req.body;
-  const result = await productsCollection.insertOne(product);
+    const product = req.body;
+    const result = await productsCollection.insertOne(product);
 
-  res.json({
-    message: "Product Added Successfully",
-    productId: result.insertedId
-  });
+    res.json({
+        message: "Product Added Successfully",
+        productId: result.insertedId
+    });
 });
 
 
 //  Get All Products
 app.get("/api/products", async (req, res) => {
-  const products = await productsCollection.find().toArray();
-  res.json(products);
+    const products = await productsCollection.find().toArray();
+    res.json(products);
 });
+
+
+//  Get Product By ID
+app.get("/products/:id", async (req, res) => {
+    const id = req.params.id;
+
+    const product = await productsCollection.findOne({ _id: new ObjectId(id) });
+    if (!product) return res.status(404).json({ message: "Product Not Found" });
+
+    res.json(product);
+});
+
 
 
 
