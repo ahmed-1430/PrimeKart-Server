@@ -37,6 +37,19 @@ app.get("/", (req, res) => {
 });
 
 
+//  Register User
+app.post("/users/register", async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const exists = await usersCollection.findOne({ email });
+  if (exists) return res.status(400).json({ message: "User already exists" });
+
+  await usersCollection.insertOne({ name, email, password });
+  res.json({ message: "✅ User Registered Successfully" });
+});
+
+
+
 //  PRODUCT ROUTES
 
 
