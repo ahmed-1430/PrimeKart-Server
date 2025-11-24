@@ -70,6 +70,19 @@ app.get("/products/:id", async (req, res) => {
 });
 
 
+//  Delete Product
+app.delete("/products/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const result = await productsCollection.deleteOne({ _id: new ObjectId(id) });
+  if (result.deletedCount === 0) {
+    return res.status(404).json({ message: "Product Not Found" });
+  }
+
+  res.json({ message: " Product Deleted Successfully" });
+});
+
+
 
 
 
