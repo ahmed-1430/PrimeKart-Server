@@ -37,6 +37,22 @@ app.get("/", (req, res) => {
 });
 
 
+//  PRODUCT ROUTES
+
+
+//  Add Product
+app.post("/api/products", async (req, res) => {
+  const product = req.body;
+  const result = await productsCollection.insertOne(product);
+
+  res.json({
+    message: "Product Added Successfully",
+    productId: result.insertedId
+  });
+});
+
+
+
 
 //  SERVER START
 app.listen(PORT, () => {
