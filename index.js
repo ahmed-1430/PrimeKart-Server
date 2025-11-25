@@ -23,6 +23,7 @@ async function connectDB() {
         db = client.db("primekartDB");
         usersCollection = db.collection("users");
         productsCollection = db.collection("products");
+        ordersCollection = db.collection("orders");
 
         console.log(" MongoDB Connected Successfully");
     } catch (error) {
@@ -92,7 +93,7 @@ app.get("/api/products", async (req, res) => {
 
 
 //  Get Product By ID
-app.get("/products/:id", async (req, res) => {
+app.get("/api/products/:id", async (req, res) => {
     const id = req.params.id;
 
     const product = await productsCollection.findOne({ _id: new ObjectId(id) });
@@ -112,6 +113,32 @@ app.delete("/products/:id", async (req, res) => {
     }
 
     res.json({ message: " Product Deleted Successfully" });
+});
+
+// POST ORDER TO DB
+app.post("/api/orders", async (req, res) => {
+    const { userId, customer, items, total, address } = req.body;
+
+    if (!userId || !items || items.length === 0) {
+        return res.status(400).json({ message: "Invalid Order Data" });
+    }
+
+    const orderData = {
+        userId,
+        customer,
+        items,
+        total,
+        address,
+        status: "Pending",
+        createdAt: new Date()
+    };
+
+    const result = await ordersCollection.insertOne(orderData);
+
+    res.json({
+        message: "Order Placed Successfully",
+        orderId: result.insertedId
+    });
 });
 
 
