@@ -141,6 +141,19 @@ app.post("/api/orders", async (req, res) => {
     });
 });
 
+// GET ORDERS BY USER EMAIL OR ID FOR USER'S ORDER
+app.get("/api/orders/:userId", async (req, res) => {
+    const userId = req.params.userId;
+
+    const orders = await ordersCollection
+        .find({ userId })
+        .sort({ createdAt: -1 })
+        .toArray();
+
+    res.json(orders);
+});
+
+
 
 
 
