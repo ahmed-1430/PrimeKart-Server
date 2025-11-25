@@ -154,6 +154,16 @@ app.get("/api/orders/:userId", async (req, res) => {
 });
 
 
+//  ALL ORDER FROM DB FOR ADMIN DASHBOARD ONLY - IMPLEMENT IT NEXT-----
+app.get("/api/orders", async (req, res) => {
+    const orders = await ordersCollection
+        .find()
+        .sort({ createdAt: -1 })
+        .toArray();
+
+    res.json(orders);
+});
+
 
 
 
