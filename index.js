@@ -68,6 +68,25 @@ app.post("/users/login", async (req, res) => {
 });
 
 
+// UPDATE USER PROFILE DATA
+app.put("/api/users/:id", async (req, res) => {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    try {
+        const result = await usersCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updatedData }
+        );
+
+        res.json({ message: "Profile updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+
+
 
 
 //  PRODUCT ROUTES
@@ -119,8 +138,12 @@ app.delete("/products/:id", async (req, res) => {
 app.post("/api/orders", async (req, res) => {
     const { userId, customer, items, total, address } = req.body;
 
-    if (!userId || !items || items.length === 0) {
-        return res.status(400).json({ message: "Invalid Order Data" });
+    if (!userId) {
+        return res.status(401).json({ message: "Unauthorized: Login required to place order" });
+    }
+
+    if (!items || items.length === 0) {
+        return res.status(400).json({ message: "Cart is empty" });
     }
 
     const orderData = {
@@ -141,16 +164,25 @@ app.post("/api/orders", async (req, res) => {
     });
 });
 
+
 // GET ORDERS BY USER EMAIL OR ID FOR USER'S ORDER
-app.get("/api/orders/:userId", async (req, res) => {
-    const userId = req.params.userId;
+app.get("/api/orders/:email", async (req, res) => {
+    try {
+        const email = req.params.email;
 
-    const orders = await ordersCollection
-        .find({ userId })
-        .sort({ createdAt: -1 })
-        .toArray();
+        // QUERY CORRECT FIELD
+        const orders = await ordersCollection
+            .find({ "customer.email": email })
+            .sort({ createdAt: -1 })
+            .toArray();
 
-    res.json(orders);
+        console.log("Fetched Orders:", orders); // DEBUG
+
+        res.json(orders);
+    } catch (err) {
+        console.error("Error fetching orders:", err);
+        res.status(500).json({ message: "Server error" });
+    }
 });
 
 
