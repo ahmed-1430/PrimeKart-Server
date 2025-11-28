@@ -32,7 +32,7 @@ let db, usersCollection, productsCollection, ordersCollection;
 async function connectDB() {
     try {
         const client = new MongoClient(MONGO_URI);
-        await client.connect();
+        // await client.connect();
         db = client.db("primekartDB");
         usersCollection = db.collection("users");
         productsCollection = db.collection("products");
@@ -165,6 +165,55 @@ app.post(
         });
     })
 );
+
+// GOOGLE LOGIN
+app.post(
+    "/api/users/google",
+    wrap(async (req, res) => {
+        const { name, email, avatar, googleId } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        // Check existing user
+        let user = await usersCollection.findOne({ email: email.toLowerCase() });
+
+        if (!user) {
+            // Create new Google user
+            const newUser = {
+                name,
+                email: email.toLowerCase(),
+                avatar,
+                googleId,
+                role: "user",
+                password: "GOOGLE_AUTH_USER",
+                createdAt: new Date(),
+            };
+
+            const result = await usersCollection.insertOne(newUser);
+            user = { ...newUser, _id: result.insertedId };
+        }
+
+        const payload = {
+            id: String(user._id),
+            name: user.name,
+            email: user.email,
+            role: user.role,
+        };
+
+        const token = createToken(payload);
+
+        return res.json({
+            message: "Google login successful",
+            user: payload,
+            token,
+        });
+    })
+);
+
+
+
 
 // GET CURRENT USER
 app.get(
@@ -427,3 +476,5 @@ app.use((err, req, res, next) => {
 
 /* -------- START SERVER -------- */
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+module.exports = app;
+
