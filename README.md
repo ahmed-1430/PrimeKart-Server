@@ -110,9 +110,9 @@ Server will run at: **[http://localhost:3000](http://localhost:3000)**
 
 ### **Auth Routes**
 
-* `POST /api/auth/register`
-* `POST /api/auth/login`
-* `GET /api/auth/profile`
+* `POST /api/users/register`
+* `POST /api/users/login`
+* `GET /api/users/profile`
 
 ### **Product Routes**
 
