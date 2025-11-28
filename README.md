@@ -1,4 +1,4 @@
-# PrimeKart Server 🚀
+# PrimeKart Server 
 
 A production-ready **Node.js + Express + MongoDB backend** powering the PrimeKart eCommerce platform. This server provides secure authentication, product management, order processing, and admin-level analytics.
 
@@ -77,7 +77,7 @@ npm install
 Create a `.env` file based on `.env.example`:
 
 ```env
-PORT=5000
+PORT=3000
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_secret
 CLOUDINARY_NAME=
@@ -91,7 +91,7 @@ CLOUDINARY_API_SECRET=
 npm run dev
 ```
 
-Server will run at: **[http://localhost:5000](http://localhost:5000)**
+Server will run at: **[http://localhost:3000](http://localhost:3000)**
 
 ---
 
@@ -147,9 +147,10 @@ Server will run at: **[http://localhost:5000](http://localhost:5000)**
 ## 👨‍💻 Author
 
 **Ahmed**
+
 *MERN Stack | Front-End Developer*
+
 🔗 LinkedIn: [https://www.linkedin.com/in/ahmed1430/](https://www.linkedin.com/in/ahmed1430/)
 
 ---
 
-If you'd like badges, endpoint tables, or more advanced API documentation (Swagger / Postman), just tell me!
